@@ -2,9 +2,9 @@ import React,{useEffect,useState} from "react";
 import axios from 'axios'
 function ProtectedResource(){
   const [data,setData]=useState(null)
-  useEffect=(()=>{
-    const access=localStorage.getItem('acess')
-    axios.get('http://localhost:8000/your-protected-endpoint/',{
+  useEffect(()=>{
+    const access=localStorage.getItem('access')
+    axios.get('http://localhost:8000/users/protected-resource/',{
       headers:{Authorization: `Bearer ${access}`}
     })
     .then (res=>setData(res.data))

@@ -1,16 +1,14 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Order, OrderItem
+from product.serializers import ProductSerializer
 class OrderItemSerializer(serializers.HyperlinkedModelSerializer):
-    order = serializers.HyperlinkedRelatedField(
-        view_name='order-detail',
-        queryset=Order.objects.all()
-    )
     
+    product = ProductSerializer(read_only=True)
     class Meta:
         model = OrderItem
         fields = ['url', 'id', 'order', 'product', 'quantity', ]
-        read_only_fields = ['id']
+        read_only_fields = ['id','order']
 class OrderSerializer(serializers.HyperlinkedModelSerializer):
 
 

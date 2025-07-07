@@ -1,12 +1,21 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers import UserSerializer
-from django.contrib.auth.models import User
+
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated  
+from django.contrib.auth.models import User
 # Create your views here.
+class ProtectedResourceView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({"message": f"Hello, {request.user.username}! This is protected data."})
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
