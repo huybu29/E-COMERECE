@@ -24,11 +24,15 @@ class CartItemViewSet(viewsets.ModelViewSet):
         Override the create method to handle custom logic if needed.
         """
         user=self.request.user
+        cart, _ = Cart.objects.get_or_create(user=user)
+         
        
-        try:
-            quantity = int(self.request.data.get('quantity', 1))  # Default to 1 if not provided
-        except (ValueError, TypeError):
-            return Response({'error': 'Invalid quantity'}, status=400)
+        
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        user = request.user
         cart, _ = Cart.objects.get_or_create(user=user)
         product = serializer.validated_data.get('product')
         quantity = serializer.validated_data.get('quantity', 1)
@@ -45,12 +49,6 @@ class CartItemViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             cart_item = serializer.save()
         # You can add custom logic here before calling the parent class's create method
-        
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        
         return Response({
         'message': 'Cart item created or updated successfully',
         'cart_item': CartItemSerializer(self._created_item, context={'request': request}).data

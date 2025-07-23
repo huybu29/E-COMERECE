@@ -12,7 +12,7 @@ function ProtectedResource(){
 
   },[])
   return (
-    <div>{data ? JSON.stringify(data):'Loading' }</div>
+    <div></div>
   )
 }
 export default ProtectedResource
